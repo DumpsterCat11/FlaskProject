@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thumbnails Linked to Flask Routes</title>
+    <script>
+        function handleThumbnailClick(thumbnailUrl) {
+            fetch('/handle_thumbnail_url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    thumbnail_url: thumbnailUrl
+                })
+            }).then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>List of Thumbnails:</h1>
+    <ul>
+        {% for url in urls %}
+            <li>
+                <a href="#" onclick="handleThumbnailClick('{{ url }}')">
+                    <img src="{{ url }}" alt="{{  url  }}">
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

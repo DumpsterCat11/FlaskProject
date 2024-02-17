@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  flask:
+    image: my-flask-app  # Update this line
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - /home/brandon/flaskapp:/app:rw
+      - /home/brandon/docker-jellyfin/jellyfin/media:/app/jellyfin_media
+      - /home/brandon/.local/bin/yt-dlp:/usr/local/bin/yt-dlp
+    environment:
+      FLASK_ENV: development
+    restart: unless-stopped
+    networks:
+      - shared-network
+
+networks:
+  shared-network:
+    external: true
+    
+    
+    
+
