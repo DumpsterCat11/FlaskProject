@@ -19,12 +19,15 @@ album_information = []
 
 @app.route('/')
 def index():
-    print("YES I ACTUALLY UPDATE 3")
+
     return render_template('index.html')
     
 @app.route('/search', methods=['POST'])
 def search():
-
+    #clear url list before next search
+    album_information.clear()
+    persistent_url_list.clear()
+    
     # Pass the search query to YTMusic API
     search_query = request.form['search_query']
     search_results = ytmusic.search(search_query)
@@ -123,8 +126,6 @@ def handle_thumbnail_url():
     thumbnail_url = request.json['thumbnail_url']
     # Process the thumbnail URL as needed
 
-    print("WHY YES I AM TOTALLY GETTING THIS THUMBNAIL: ", thumbnail_url)
-
     # if user clicked album, look through list of dicts for specific url
     # if that dict has that specific url, look through that dict for ["tracks"]["videoIds"]
     # append all videoIds to a list and yt-dlp each item in that list with the videoId appended to the end
@@ -176,11 +177,9 @@ def handle_thumbnail_url():
         except subprocess.CalledProcessError as e:
             print("Subprocess Error:", e)
 
-    print("DEBUG YES WE GET TO LINE 175")
     #clear url list before next search
     album_information.clear()
     persistent_url_list.clear()
-    print("DEBUG YES WE GET TO LINE 181")
     return render_template('downloading.html', thumbnail_url=thumbnail_url)
     
  
