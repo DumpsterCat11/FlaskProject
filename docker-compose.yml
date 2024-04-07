@@ -8,7 +8,7 @@ services:
       - "5000:5000"
     volumes:
       - /home/brandon/flaskapp:/app:rw
-      - /home/brandon/docker-jellyfin/jellyfin/media:/app/jellyfin_media
+      - /home/brandon/docker-jellyfin2/jellyfin/media:/app/jellyfin_media
       - /home/brandon/.local/bin/yt-dlp:/usr/local/bin/yt-dlp
     environment:
       FLASK_ENV: development
