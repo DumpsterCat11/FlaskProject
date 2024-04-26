@@ -24,7 +24,12 @@
 </head>
 <body>
     <h1>Janktube Search</h1>
-    <form action="/poggers_route" method="post">
+    <nav>
+      <a href="/" aria-current="page">Home</a>
+      <a href="/hot_singles_route">Hot Singles</a>
+    </nav>
+
+    <form action="/hot_singles_route" method="post">
       <button type ="submit">Put Hot Singles in me</button> 
     </form>
     <form action="{{ url_for('search') }}" method="post">
