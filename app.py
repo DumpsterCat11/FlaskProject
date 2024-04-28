@@ -265,10 +265,12 @@ def hot_singles():
 def hot_singles_results():
     search_query = request.form.get("hot_singles_results")
     print(f"search_query = {search_query}")
-    hot_singles_audio_output_location = "/app/jellyfin_media/music/hot_singles"
-    hot_singles_audio_command = ["python3", "/usr/local/bin/yt-dlp", f"{search_query}", "--extract-audio", "--audio-format", "best", "--embed-thumbnail", "--write-thumbnail", "--add-metadata", "-o", hot_singles_audio_output_location]
+    test_output_location = "/home/brandon/mycoolmusic/%(title)s.%(ext)s"
+    test_command = ["python3", "/home/brandon/.local/bin/yt-dlp", f"{search_query}", "--extract-audio", "--audio-format", "best", "-o", test_output_location]
+    #hot_singles_audio_output_location = "/app/jellyfin_media/music/hot_singles"
+    #hot_singles_audio_command = ["python3", "/usr/local/bin/yt-dlp", f"{search_query}", "--extract-audio", "--audio-format", "best", "--embed-thumbnail", "--write-thumbnail", "--add-metadata", "-o", hot_singles_audio_output_location]
     
-    subprocess.run(hot_singles_audio_command)
+    subprocess.run(test_command)
 
     return render_template("hot_singles_results.html", search_query=search_query)
     
