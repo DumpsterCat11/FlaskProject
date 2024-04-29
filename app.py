@@ -19,7 +19,7 @@ albums_value=None
 album_items = []
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
 
     return render_template('index.html')
@@ -246,15 +246,33 @@ def handle_thumbnail_url():
         os.makedirs(artist_album_dir)    
 
     output_location = os.path.join(artist_album_dir, "%(title)s.%(ext)s")
-    #subprocess_command = ["python3", "/usr/local/bin/yt-dlp", f"https://www.youtube.com/watch?v={track}", "--extract-audio", "--audio-format", "best", "--embed-thumbnail", "--write-thumbnail", "--add-metadata", "-o", output_location]
     for item in album_video_ids:
-        subprocess.run(["python3", "/usr/local/bin/yt-dlp", f"https://www.youtube.com/watch?v={item}", "--extract-audio", "--audio-format", "best", "--embed-thumbnail", "--write-thumbnail", "--add-metadata", "-o", output_location])
+        #docker location: "python3", "/usr/local/bin/yt-dlp"
+        subprocess_command = ["python3", "/usr/local/bin/yt-dlp", f"https://www.youtube.com/watch?v={item}", "--extract-audio", "--audio-format", "best", "--embed-thumbnail", "--write-thumbnail", "--add-metadata", "-o", output_location]
+        subprocess.run(subprocess_command)
          
     #clear url list before next search
     album_items.clear()
     album_information.clear()
     persistent_url_list.clear()
     return render_template('downloading.html', thumbnail_url=thumbnail_url)
+
+@app.route("/hot_singles_route", methods=["GET", "POST"])
+def hot_singles():
+    return render_template("hot_singles.html")
+
+@app.route("/hot_singles_results_route", methods=["POST", "GET"])
+def hot_singles_results():
+    search_query = request.form.get("hot_singles_results")
+    print(f"search_query = {search_query}")
+    #test_output_location = "/home/brandon/mycoolmusic/%(title)s.%(ext)s"
+    #test_command = ["python3", "/home/brandon/.local/bin/yt-dlp", f"{search_query}", "--extract-audio", "--audio-format", "best", "-o", test_output_location]
+    hot_singles_audio_output_location = "/app/jellyfin_media/Single_Tracks/%(title)s.%(ext)s"
+    hot_singles_audio_command = ["python3", "/usr/local/bin/yt-dlp", f"{search_query}", "--extract-audio", "--audio-format", "best", "--embed-thumbnail", "--write-thumbnail", "--add-metadata", "-o", hot_singles_audio_output_location]
+    
+    subprocess.run(hot_singles_audio_command)
+
+    return render_template("hot_singles_results.html", search_query=search_query)
     
 if __name__ == '__main__':
     app.run(debug=True)
