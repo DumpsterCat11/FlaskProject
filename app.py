@@ -21,7 +21,6 @@ album_items = []
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-
     return render_template('index.html')
     
 @app.route('/search', methods=['POST'])
@@ -263,14 +262,24 @@ def hot_singles():
 
 @app.route("/hot_singles_results_route", methods=["POST", "GET"])
 def hot_singles_results():
+    video = request.form.get("Video")
     search_query = request.form.get("hot_singles_results")
     print(f"search_query = {search_query}")
-    #test_output_location = "/home/brandon/mycoolmusic/%(title)s.%(ext)s"
-    #test_command = ["python3", "/home/brandon/.local/bin/yt-dlp", f"{search_query}", "--extract-audio", "--audio-format", "best", "-o", test_output_location]
-    hot_singles_audio_output_location = "/app/jellyfin_media/Single_Tracks/%(title)s.%(ext)s"
-    hot_singles_audio_command = ["python3", "/usr/local/bin/yt-dlp", f"{search_query}", "--extract-audio", "--audio-format", "best", "--embed-thumbnail", "--write-thumbnail", "--add-metadata", "-o", hot_singles_audio_output_location]
     
-    subprocess.run(hot_singles_audio_command)
+    #test_output_location = "/home/brandon/mycoolmusic/%(title)s.%(ext)s"
+    #test_audio_command = ["python3", "/home/brandon/.local/bin/yt-dlp", f"{search_query}", "--extract-audio", "--audio-format", "best", "-o", test_output_location]
+    #test_video_command = ["python3", "/home/brandon/.local/bin/yt-dlp", f"{search_query}", "-o", test_output_location]
+
+    if video:
+        hot_singles_output_location = "/app/jellyfin_media/videos/%(title)s.%(ext)s"
+        hot_singles_subprocess_command = ["python3", "/usr/local/bin/yt-dlp", f"{search_query}", "-o", hot_singles_output_location]
+        #hot_singles_subprocess_command = test_video_command
+    else:
+        hot_singles_output_location = "/app/jellyfin_media/Single_Tracks/%(title)s.%(ext)s"
+        hot_singles_subprocess_command = ["python3", "/usr/local/bin/yt-dlp", f"{search_query}", "--extract-audio", "--audio-format", "best", "--embed-thumbnail", "--write-thumbnail", "--add-metadata", "-o", hot_singles_output_location]
+        #hot_singles_subprocess_command = test_audio_command
+    
+    subprocess.run(hot_singles_subprocess_command)
 
     return render_template("hot_singles_results.html", search_query=search_query)
     
